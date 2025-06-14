@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function AccountPage() {
@@ -7,8 +8,12 @@ export default function AccountPage() {
     nickname: string;
     role: string;
   } | null>(null);
-  const [nickname, setNickname] = useState("");
-  const [role, setRole] = useState("");
+
+  const [form, setForm] = useState({
+    nickname: "",
+    role: "",
+  });
+
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -23,15 +28,21 @@ export default function AccountPage() {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
-        setNickname(data.nickname);
-        setRole(data.role);
+        setForm({
+          nickname: data.nickname,
+          role: data.role,
+        });
       }
     });
   }, []);
 
-  useEffect(() => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
     setMessage("");
-  }, [nickname, role]);
+  };
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
@@ -43,86 +54,84 @@ export default function AccountPage() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ nickname, role }),
+      body: JSON.stringify(form),
     });
 
     if (res.ok) {
-      setMessage("✅ Saved!");
+      setMessage("✅ Збережено успішно");
     } else {
-      setMessage("❌ Failed to save");
+      setMessage("❌ Не вдалося зберегти");
     }
   };
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p style={{ textAlign: "center" }}>Завантаження...</p>;
 
   return (
     <div
       style={{
-        textAlign: "center",
+        textAlign: "left",
         maxWidth: "400px",
         margin: "0 auto",
+        padding: "40px",
         color: "#000",
       }}
     >
-      <h2>Account Info</h2>
+      <h2 style={{ textAlign: "center" }}>👤 Інформація про акаунт</h2>
+
       <p>
         <strong>Email:</strong> {user.email}
       </p>
 
       <div style={{ marginTop: "20px" }}>
-        <label style={{ display: "block", marginBottom: "4px" }}>
-          Nickname:
-        </label>
+        <label>Нікнейм:</label>
         <input
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          name="nickname"
+          value={form.nickname}
+          onChange={handleChange}
           style={{
             padding: "8px",
             width: "100%",
-            marginBottom: "16px",
-            border: "2px solid black",
-            outline: "none",
-            background: "transparent",
-            color: "#000",
+            marginBottom: "12px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
             textAlign: "center",
           }}
         />
 
-        <label style={{ display: "block", marginBottom: "4px" }}>Role:</label>
+        <label>Роль:</label>
         <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+          name="role"
+          value={form.role}
+          onChange={handleChange}
           style={{
             padding: "8px",
             width: "100%",
-            border: "none",
-            borderBottom: "2px solid black",
-            outline: "none",
-            background: "transparent",
-            color: "#000",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
             textAlign: "center",
-            appearance: "none",
+            marginBottom: "20px",
           }}
         >
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
 
-        <br />
-        <br />
         <button
           onClick={handleSave}
           style={{
             padding: "10px 20px",
+            width: "100%",
             borderBottom: "2px solid #000",
-            background: "none",
+            background: "#f5f5f5",
             cursor: "pointer",
           }}
         >
-          Save
+          💾 Зберегти
         </button>
 
-        {message && <p style={{ marginTop: "10px" }}>{message}</p>}
+        {message && (
+          <p style={{ marginTop: "10px", textAlign: "center" }}>{message}</p>
+        )}
       </div>
     </div>
   );

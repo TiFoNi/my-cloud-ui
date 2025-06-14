@@ -9,7 +9,7 @@ type FileEntry = {
   uploadedAt: string;
 };
 
-export default function FilesPage() {
+export default function Page() {
   const [file, setFile] = useState<File | null>(null);
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default function FilesPage() {
     link.href = `/api/files/proxy-download?s3Key=${encodeURIComponent(
       s3Key
     )}&filename=${encodeURIComponent(filename)}`;
-    link.setAttribute("download", filename);
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -111,7 +111,6 @@ export default function FilesPage() {
               {new Date(file.uploadedAt).toLocaleString()}
             </div>
           </div>
-
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={() => downloadFile(file.s3Key, file.filename)}>
               ⬇️
