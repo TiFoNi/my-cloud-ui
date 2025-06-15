@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./files.module.css";
 
 type FileItem = {
   _id: string;
@@ -17,18 +18,23 @@ export default function FilesPage() {
   const router = useRouter();
 
   const fetchFiles = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return router.push("/login");
 
-    const res = await fetch("/api/files", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+      const res = await fetch("/api/files", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    if (!res.ok) return console.error("Failed to fetch files");
+      if (!res.ok) return console.error("Failed to fetch files");
 
-    const data = await res.json();
-    setFiles(data);
-    setLoading(false);
+      const data = await res.json();
+      setFiles(data);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [router]);
 
   const downloadFile = async (s3Key: string, filename: string) => {
@@ -62,36 +68,33 @@ export default function FilesPage() {
     fetchFiles();
   }, [fetchFiles]);
 
-  if (loading) return <p>Loading files...</p>;
+  if (loading) return <p className={styles.loading}>Loading files...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-4">
-      <h1 className="text-2xl font-bold mb-6">Your Files</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Your Files</h1>
       {files.length === 0 ? (
-        <p>No files uploaded.</p>
+        <p className={styles.empty}>No files uploaded.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className={styles.fileList}>
           {files.map((file) => (
-            <li
-              key={file._id}
-              className="flex items-center justify-between border p-3 rounded"
-            >
+            <li key={file._id} className={styles.fileItem}>
               <div>
-                <p className="font-medium">{file.filename}</p>
-                <p className="text-sm text-gray-500">
+                <p className={styles.fileName}>{file.filename}</p>
+                <p className={styles.uploadDate}>
                   Uploaded at: {new Date(file.uploadedAt).toLocaleString()}
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div className={styles.actions}>
                 <button
                   onClick={() => downloadFile(file.s3Key, file.filename)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                  className={styles.downloadBtn}
                 >
                   Download
                 </button>
                 <button
                   onClick={() => deleteFile(file._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  className={styles.deleteBtn}
                 >
                   Delete
                 </button>

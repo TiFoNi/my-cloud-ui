@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./register.module.css";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,7 +13,10 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) return setError("Passwords don't match");
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -34,13 +38,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      <form onSubmit={handleRegister} className="space-y-4">
+    <div className={styles.container}>
+      <h1 className={styles.title}>Register</h1>
+      <form onSubmit={handleRegister} className={styles.form}>
         <input
           type="email"
           placeholder="Email"
-          className="w-full border p-2 rounded"
+          className={styles.input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -48,7 +52,7 @@ export default function RegisterPage() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full border p-2 rounded"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -56,16 +60,13 @@ export default function RegisterPage() {
         <input
           type="password"
           placeholder="Confirm Password"
-          className="w-full border p-2 rounded"
+          className={styles.input}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
-        >
+        {error && <p className={styles.error}>{error}</p>}
+        <button type="submit" className={styles.button}>
           Register
         </button>
       </form>

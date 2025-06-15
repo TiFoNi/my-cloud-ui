@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import styles from "./login.module.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -30,19 +31,10 @@ export default function LoginPage() {
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        maxWidth: 400,
-        margin: "50px auto",
-        color: "black",
-      }}
-    >
-      <h2>Login</h2>
+    <form className={styles.form} onSubmit={handleLogin}>
+      <h2 className={styles.title}>Login</h2>
       <input
+        className={styles.input}
         placeholder="Email"
         type="email"
         value={email}
@@ -50,14 +42,17 @@ export default function LoginPage() {
         required
       />
       <input
+        className={styles.input}
         placeholder="Password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">Login</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button className={styles.button} type="submit">
+        Login
+      </button>
+      {error && <p className={styles.error}>{error}</p>}
     </form>
   );
 }

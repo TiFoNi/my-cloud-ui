@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import styles from "./upload.module.css";
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,7 +13,6 @@ export default function UploadPage() {
     if (!file) return;
 
     setLoading(true);
-
     const token = localStorage.getItem("token");
     if (!token) return alert("Unauthorized");
 
@@ -37,17 +37,17 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-12 p-6 border rounded">
-      <h1 className="text-2xl font-bold mb-6">Upload a File</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Upload a File</h1>
       <input
         type="file"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
-        className="mb-4"
+        className={styles.input}
       />
       <button
         onClick={handleUpload}
         disabled={!file || loading}
-        className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        className={styles.button}
       >
         {loading ? "Uploading..." : "Upload"}
       </button>

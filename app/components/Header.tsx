@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import styles from "./header.module.css";
 
 const navLinks = [
   { href: "/", label: "Головна" },
@@ -15,15 +14,12 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-lg font-semibold"
-        >
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <Link href="/" className={styles.logo}>
           <svg
-            width="20"
-            height="20"
+            width="22"
+            height="22"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -47,29 +43,27 @@ export default function Header() {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="sr-only">MyCloud</span>
+          <span>MyCloud</span>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        <nav className={styles.nav}>
           {navLinks.map(({ href, label }) => {
             const isActive = pathname === href;
             return (
               <Link
                 key={href}
                 href={href}
-                className={cn(
-                  "inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
-                  "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50",
-                  isActive && "bg-gray-100 dark:bg-gray-800"
-                )}
+                className={`${styles.navLink} ${isActive ? styles.active : ""}`}
               >
                 {label}
               </Link>
             );
           })}
+        </nav>
 
-          <Button variant={"default"}>Sign in</Button>
-          <Button className="h-8 px-3 text-xs">Sign up</Button>
+        <div className={styles.actions}>
+          <button className={styles.signIn}>Sign in</button>
+          <button className={styles.signUp}>Sign up</button>
         </div>
       </div>
     </header>

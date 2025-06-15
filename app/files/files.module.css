@@ -1,0 +1,75 @@
+.container {
+    max-width: 768px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.loading,
+.empty {
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+}
+
+.fileList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.fileItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.fileName {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.uploadDate {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.downloadBtn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.downloadBtn:hover {
+    background-color: #2563eb;
+}
+
+.deleteBtn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.deleteBtn:hover {
+    background-color: #dc2626;
+}
