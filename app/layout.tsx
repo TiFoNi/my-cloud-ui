@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import "./globals.css";
 import { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,6 +9,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Header />
         <main className="p-4 max-w-4xl mx-auto">{children}</main>
+        <Toaster />
       </body>
     </html>
   );
