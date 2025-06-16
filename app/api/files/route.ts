@@ -1,41 +1,25 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import { JwtPayload } from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "@/lib/db";
+import { verifyToken } from "@/lib/utils/verifyToken";
+import File from "@/models/File";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-await mongoose.connect(MONGODB_URI);
+export async function GET(req: NextRequest) {
+  await connectDB();
 
-const FileSchema = new mongoose.Schema({
-  userId: String,
-  filename: String,
-  s3Key: String,
-  url: String,
-  uploadedAt: { type: Date, default: Date.now },
-});
+  const token = req.headers.get("authorization")?.split(" ")[1];
+  const userId = verifyToken(token);
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-const FileModel = mongoose.models.File || mongoose.model("File", FileSchema);
+  const { searchParams } = new URL(req.url);
+  const folderId = searchParams.get("folderId");
 
-export async function GET(req: Request) {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return NextResponse.json({ error: "Missing token" }, { status: 401 });
+  const query: Record<string, unknown> = { userId };
+
+  if (folderId !== null) {
+    query.folderId = folderId === "null" ? null : folderId;
   }
 
-  const token = authHeader.split(" ")[1];
-  let userId: string;
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    userId = decoded.userId as string;
-  } catch {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
-  try {
-    const files = await FileModel.find({ userId }).sort({ uploadedAt: -1 });
-    return NextResponse.json(files);
-  } catch {
-    return NextResponse.json({ error: "Database error" }, { status: 500 });
-  }
+  const files = await File.find(query).sort({ uploadedAt: -1 });
+  return NextResponse.json(files);
 }

@@ -26,14 +26,9 @@ export async function GET(req: NextRequest) {
 
     const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
 
-    return NextResponse.json({ url: signedUrl });
+    return NextResponse.redirect(signedUrl);
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error("Signed URL generation error:", err.message);
-    } else {
-      console.error("Unknown error generating signed URL");
-    }
-
+    console.error("Signed URL generation error:", err);
     return NextResponse.json(
       { error: "Failed to generate signed URL" },
       { status: 500 }

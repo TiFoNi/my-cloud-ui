@@ -1,19 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "@/lib/db";
+import { verifyToken } from "@/lib/utils/verifyToken";
+import File from "@/models/File";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import mongoose from "mongoose";
-
-const MONGODB_URI = process.env.MONGODB_URI!;
-await mongoose.connect(MONGODB_URI);
-
-const FileSchema = new mongoose.Schema({
-  userId: String,
-  filename: String,
-  s3Key: String,
-  url: String,
-  uploadedAt: { type: Date, default: Date.now },
-});
-const FileModel = mongoose.models.File || mongoose.model("File", FileSchema);
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -24,29 +13,17 @@ const s3 = new S3Client({
 });
 
 export async function DELETE(req: NextRequest) {
+  await connectDB();
+
   const token = req.headers.get("authorization")?.split(" ")[1];
-  if (!token) {
-    return NextResponse.json({ error: "Missing token" }, { status: 401 });
-  }
+  const userId = verifyToken(token);
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  let userId: string;
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    if (!decoded.userId || typeof decoded.userId !== "string") {
-      throw new Error("Invalid token payload");
-    }
-    userId = decoded.userId;
-  } catch {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
-  const body = await req.json();
-  const fileId: string = body.fileId;
-
-  const file = await FileModel.findOne({ _id: fileId, userId });
-  if (!file) {
+  const { fileId } = await req.json();
+  const file = await File.findOne({ _id: fileId, userId });
+  if (!file)
     return NextResponse.json({ error: "File not found" }, { status: 404 });
-  }
 
   await s3.send(
     new DeleteObjectCommand({
@@ -55,7 +32,7 @@ export async function DELETE(req: NextRequest) {
     })
   );
 
-  await FileModel.deleteOne({ _id: fileId });
+  await File.deleteOne({ _id: fileId });
 
   return NextResponse.json({ message: "File deleted" });
 }

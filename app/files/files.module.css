@@ -1,68 +1,172 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+:root {
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --success: #10b981;
+    --success-hover: #059669;
+    --gray: #6b7280;
+    --light-gray: #e5e7eb;
+    --font-main: 'Inter', sans-serif;
+}
 .container {
-    max-width: 1280px;
+max-width: 1280px;
     margin: 3rem auto;
     padding: 0 1rem;
     font-family: var(--font-main);
 }
 
 .title {
-    font-size: 2rem;
+font-size: 2rem;
     font-weight: 700;
     margin-bottom: 2rem;
     text-align: center;
 }
 
-.fileList {
-display: grid;
+.layout {
+    display: flex;
+    gap: 2rem;
+}
+
+.sidebar {
+    width: 240px;
+    border-right: 1px solid var(--light-gray);
+    padding-right: 1rem;
+}
+
+.sidebarTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.folderList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.folderItem {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: #374151;
+    font-weight: 500;
+}
+
+.folderItem:hover {
+    background-color: #f3f4f6;
+}
+
+.activeFolder {
+    background-color: #e5e7eb;
+    font-weight: 600;
+}
+
+.newFolderForm {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.textInput,
+.fileInput {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid var(--light-gray);
+    border-radius: 6px;
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: var(--success);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.button:hover {
+    background-color: var(--success-hover);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.uploadForm {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.fileGrid {
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1.5rem;
 }
 
-.fileItem {
-background: #fff;
+.card {
+    background: white;
     padding: 1.25rem;
-    min-height: 160px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
+border-radius: 10px;
+border: 1px solid var(--light-gray);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
+    display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+min-height: 160px;
 }
 
-.fileItem:hover {
+.card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
 }
 
-.fileName {
-font-weight: 600;
+.cardHeader {
+    font-weight: 600;
     font-size: 1rem;
-    margin-bottom: 0.3rem;
+margin-bottom: 0.5rem;
     color: #111827;
     word-break: break-word;
 }
 
-.uploadDate {
-font-size: 0.9rem;
-    color: #6b7280;
+.cardBody {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cardBody p {
+    font-size: 0.9rem;
+color: var(--gray);
     margin-bottom: 0.75rem;
 }
 
-.actions {
-margin-top: auto;
-display: flex;
-justify-content: space-between;
-gap: 0.5rem;
+.cardActions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .downloadBtn,
 .deleteBtn {
-    flex: 1;
-    font-size: 1rem;
+flex: 1;
+font-size: 0.95rem;
     font-weight: 500;
     padding: 0.45rem 0.75rem;
     border-radius: 6px;
@@ -70,27 +174,115 @@ gap: 0.5rem;
     cursor: pointer;
     transition: background 0.2s ease;
 }
+
 .downloadBtn {
-background-color: #3b82f6;
+background-color: var(--primary);
     color: white;
+    text-decoration: none;
 }
 
 .downloadBtn:hover {
-background-color: #2563eb;
+background-color: var(--primary-hover);
 }
 
 .deleteBtn {
-background-color: #ef4444;
+background-color: var(--danger);
     color: white;
 }
 
 .deleteBtn:hover {
-background-color: #dc2626;
+background-color: var(--danger-hover);
 }
-.empty,
-.loading {
+.loading,
+.empty {
     text-align: center;
-    color: #6b7280;
+font-size: 1rem;
+color: var(--gray);
+margin-top: 3rem;
+}
+.uploadWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.uploadButton {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
     font-size: 1rem;
-    margin-top: 3rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.uploadButton:hover {
+    background-color: var(--primary-hover);
+}
+
+.fileInputHidden {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.uploadCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #9ca3af;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px dashed var(--light-gray);
+    background: #f9fafb;
+}
+
+.uploadCard:hover {
+    background-color: #f3f4f6;
+}
+
+.uploadLabel {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.plus {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.uploadButtonCard {
+    margin-top: 1rem;
+    padding: 0.4rem 1rem;
+    background-color: var(--success);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.uploadButtonCard:hover {
+    background-color: var(--success-hover);
+}
+
+.fileInputHidden {
+    display: none;
 }

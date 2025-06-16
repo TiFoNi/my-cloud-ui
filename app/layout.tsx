@@ -1,10 +1,17 @@
 import Header from "./components/Header";
 import "./globals.css";
 import { ReactNode } from "react";
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-main",
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="uk">
+    <html lang="uk" className={inter.variable}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"

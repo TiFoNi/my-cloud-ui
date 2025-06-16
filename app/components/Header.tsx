@@ -4,17 +4,20 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./header.module.css";
 import { useAuthStore } from "@/lib/store/auth";
+import { useHasHydrated } from "@/lib/utils/useHasHydrated";
 
 const navLinks = [
   { href: "/", label: "Головна" },
-  { href: "/upload", label: "Завантажити" },
   { href: "/files", label: "Файли" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
+  const hydrated = useHasHydrated();
   const router = useRouter();
   const { isLoggedIn, logout } = useAuthStore();
+
+  if (!hydrated) return null;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
