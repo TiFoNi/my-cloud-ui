@@ -3,12 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./login.module.css";
+import { useAuthStore } from "@/lib/store/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { login } = useAuthStore();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       localStorage.setItem("token", data.token);
+      login();
       router.push("/files");
     } else {
       setError(data.error || "Login failed");

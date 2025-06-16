@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./files.module.css";
+import { useAuthStore } from "@/lib/store/auth";
 
 type FileItem = {
   _id: string;
@@ -16,6 +17,13 @@ export default function FilesPage() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
+  }, [isLoggedIn, router]);
 
   const fetchFiles = useCallback(async () => {
     try {

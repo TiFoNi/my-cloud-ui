@@ -1,75 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --font-main: 'Inter', sans-serif;
+}
+
 .container {
-    max-width: 768px;
-    margin: 2rem auto;
-    padding: 1rem;
+    max-width: 1280px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+    font-family: var(--font-main);
 }
 
 .title {
-    font-size: 1.75rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-.loading,
-.empty {
-    font-size: 1rem;
-    color: #555;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
 .fileList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
 }
 
 .fileItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+background: #fff;
+    padding: 1.25rem;
+    min-height: 160px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.fileItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
 }
 
 .fileName {
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: #111827;
+    word-break: break-word;
 }
 
 .uploadDate {
-    font-size: 0.875rem;
-    color: #666;
+font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
 }
 
 .actions {
-    display: flex;
-    gap: 0.5rem;
+margin-top: auto;
+display: flex;
+justify-content: space-between;
+gap: 0.5rem;
 }
 
-.downloadBtn {
-    background-color: #3b82f6;
-    color: white;
+.downloadBtn,
+.deleteBtn {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.45rem 0.75rem;
+    border-radius: 6px;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
     cursor: pointer;
+    transition: background 0.2s ease;
+}
+.downloadBtn {
+background-color: #3b82f6;
+    color: white;
 }
 
 .downloadBtn:hover {
-    background-color: #2563eb;
+background-color: #2563eb;
 }
 
 .deleteBtn {
-    background-color: #ef4444;
+background-color: #ef4444;
     color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .deleteBtn:hover {
-    background-color: #dc2626;
+background-color: #dc2626;
+}
+.empty,
+.loading {
+    text-align: center;
+    color: #6b7280;
+    font-size: 1rem;
+    margin-top: 3rem;
 }

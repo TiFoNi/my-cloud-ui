@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./header.module.css";
+import { useAuthStore } from "@/lib/store/auth";
 
 const navLinks = [
   { href: "/", label: "Головна" },
@@ -12,38 +13,66 @@ const navLinks = [
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isLoggedIn, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    logout();
+    router.push("/login");
+  };
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
           <svg
-            width="22"
-            height="22"
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 64 64"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
           >
             <path
-              d="M12 2L2 7l10 5 10-5-10-5z"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              d="M17.23,34.87l12.56-5.22,4.55-5.02-1.74-7.26-.91-3.45-11.1,1.17-3.98,8.29c-.56,1.17-.76,2.49-.56,3.78l1.18,7.7Z"
+              fill="#758797"
             />
             <path
-              d="M2 17l10 5 10-5"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              d="M20.92,59l1.78-2.59-2.57-2.53-4.87,3.87c-.52,.41-.22,1.24,.44,1.24h5.21Z"
+              fill="#fce87b"
             />
             <path
-              d="M2 12l10 5 10-5"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              d="M29.8,29.65l-12.56,5.22,2.9,19.01,.78,5.12h11.04l-2.16-29.35Z"
+              fill="#f0f4f6"
+            />
+            <path
+              d="M32.61,17.38l-4.2,12.86,1.4-.58,2.66-2.94,.14-9.34Z"
+              fill="#637380"
+            />
+            <path
+              d="M29.8,29.65l-1.41,.59-8.66,20.99,1.19,7.78h11.04l-2.16-29.35Z"
+              fill="#e2eef2"
+            />
+            <path
+              d="M44.61,19.65l-8.92-4.41-3.08,2.14-2.81,12.28-2.81,12.28c-.09,.4-.14,.8-.16,1.21-.02,.41,0,.82,.07,1.22,.06,.4,.16,.8,.3,1.19l4.76,13.45h9.04c1.18,0,2.2-.8,2.49-1.94l5.29-20.82c.32-1.27,.28-2.6-.12-3.84l-4.05-12.74Z"
+              fill="#8598ab"
+            />
+            <path
+              d="M15.98,5c-.65,0-.93,.82-.41,1.22l6.8,5.21,3.1-2.23-.02-4.2H15.98Z"
+              fill="#fce87b"
+            />
+            <path
+              d="M25.45,5l-3.08,6.43-1.76,3.67,12,2.28,12.01,2.28-4.05-12.74c-.36-1.14-1.42-1.91-2.61-1.91h-12.5Z"
+              fill="#9dacb9"
+            />
+            <path d="M25.45,5l-5.5,4.57,2.41,1.85,3.08-6.42Z" fill="#fdda5c" />
+            <path d="M20.92,59l-2.8-3.51,2.01-1.6,.78,5.12Z" fill="#fdda5c" />
+            <path
+              d="M14.02,58.11c-.05,.45,.08,.89,.36,1.25,.32,.41,.81,.64,1.33,.64h25.3c1.64,0,3.06-1.11,3.46-2.69l5.29-20.82c.37-1.45,.32-2.97-.13-4.39L41.51,6.6c-.5-1.56-1.93-2.6-3.56-2.6H15.98c-.93,0-1.68,.75-1.68,1.68,0,.52,.25,1.02,.66,1.33h0l6.15,4.72-5.39,11.24c-.65,1.36-.88,2.87-.65,4.36l3.99,26.13-4.41,3.51c-.36,.28-.58,.69-.63,1.14Zm33.8-22.12l-5.29,20.82c-.18,.7-.8,1.18-1.52,1.18h-8.33l-4.52-12.78c-.35-.99-.41-2.05-.18-3.07l5.4-23.62,10.47,1.99,3.87,12.18c.34,1.07,.37,2.21,.1,3.3ZM39.6,7.21l3.55,11.15-21.08-4,4.01-8.36h11.87c.76,0,1.42,.49,1.65,1.21Zm-22.68-1.21h6.93l-1.86,3.88-5.07-3.88Zm.6,17.83l3.65-7.6,10.23,1.94-2.46,10.76-10.91,4.53-.98-6.43c-.17-1.09,0-2.2,.48-3.2Zm.82,11.66l10.05-4.17-2.38,10.39c-.32,1.39-.23,2.83,.24,4.18l4.29,12.11h-8.77l-.65-4.27-2.79-18.24Zm1.07,20.25l.35,2.26h-3.19l2.84-2.26Z"
+              fill="#000"
             />
           </svg>
-          <span>MyCloud</span>
+          <span>RicoCloud</span>
         </Link>
 
         <nav className={styles.nav}>
@@ -62,8 +91,26 @@ export default function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <button className={styles.signIn}>Sign in</button>
-          <button className={styles.signUp}>Sign up</button>
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className={styles.logout}>
+              Logout
+            </button>
+          ) : (
+            <>
+              <button
+                className={styles.signIn}
+                onClick={() => router.push("/login")}
+              >
+                Sign in
+              </button>
+              <button
+                className={styles.signUp}
+                onClick={() => router.push("/register")}
+              >
+                Sign up
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>
