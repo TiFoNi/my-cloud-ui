@@ -12,12 +12,7 @@ const inter = Inter({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="uk" className={inter.variable}>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+      <head />
       <body className="bg-white text-gray-900 font-sans">
         <Header />
         <main className="p-6 max-w-screen-xl mx-auto">{children}</main>

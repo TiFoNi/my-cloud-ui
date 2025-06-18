@@ -2,6 +2,15 @@
 
 :root {
 font-family: var(--font-main);
+--primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --success: #10b981;
+    --success-hover: #059669;
+    --gray: #6b7280;
+    --light-gray: #e5e7eb;
+    --font-main: 'Inter', sans-serif;
 }
 
 body {

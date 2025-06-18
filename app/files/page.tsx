@@ -23,14 +23,13 @@ interface FolderItem {
 export default function FilesPage() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [folders, setFolders] = useState<FolderItem[]>([]);
-  const [file, setFile] = useState<File | null>(null);
   const [selectedFolderId, setSelectedFolderId] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState("");
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
-
+  console.log(uploading);
   useEffect(() => {
     if (!isLoggedIn) router.push("/login");
   }, [isLoggedIn, router]);
@@ -57,7 +56,7 @@ export default function FilesPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleUpload = async () => {
+  const handleUpload = async (file: File) => {
     if (!file) return;
     setUploading(true);
     const token = localStorage.getItem("token");
@@ -73,10 +72,7 @@ export default function FilesPage() {
       body: formData,
     });
 
-    if (res.ok) {
-      setFile(null);
-      fetchData();
-    }
+    if (res.ok) fetchData();
     setUploading(false);
   };
 
@@ -102,6 +98,67 @@ export default function FilesPage() {
     }
   };
 
+  const handleDeleteFolder = async (folderId: string) => {
+    const confirmed = window.confirm(
+      "Видалити цю папку з усіма файлами та підпапками?"
+    );
+    if (!confirmed) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch("/api/folders", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ folderId }),
+    });
+
+    if (res.ok) {
+      if (selectedFolderId === folderId) setSelectedFolderId("");
+      fetchData();
+    }
+  };
+
+  const renderFolders = (parentId: string | null = null, level = 0) => {
+    return folders
+      .filter((f) => f.parentId === parentId)
+      .map((folder) => (
+        <div key={folder._id}>
+          <div
+            className={`${styles.folderItem} ${
+              selectedFolderId === folder._id ? styles.activeFolder : ""
+            }`}
+            style={{
+              paddingLeft: `${level * 1}rem`,
+              marginTop: "2px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            onClick={() => setSelectedFolderId(folder._id)}
+          >
+            <span>
+              {level > 0 && <span style={{ marginRight: "4px" }}>↳</span>}
+              📁 {folder.name}
+            </span>
+            <button
+              className={styles.deleteFolderBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteFolder(folder._id);
+              }}
+            >
+              ❌
+            </button>
+          </div>
+          {renderFolders(folder._id, level + 1)}
+        </div>
+      ));
+  };
+
   const filteredFiles = files.filter(
     (f) => (f.folderId ?? null) === (selectedFolderId || null)
   );
@@ -121,24 +178,12 @@ export default function FilesPage() {
               className={`${styles.folderItem} ${
                 !selectedFolderId ? styles.activeFolder : ""
               }`}
+              style={{ paddingLeft: 0 }}
               onClick={() => setSelectedFolderId("")}
             >
-              📁 Root
+              📁 Всі файли
             </div>
-
-            {folders
-              .filter((f) => !f.parentId)
-              .map((folder) => (
-                <div
-                  key={folder._id}
-                  className={`${styles.folderItem} ${
-                    selectedFolderId === folder._id ? styles.activeFolder : ""
-                  }`}
-                  onClick={() => setSelectedFolderId(folder._id)}
-                >
-                  📁 {folder.name}
-                </div>
-              ))}
+            {renderFolders()}
           </div>
 
           <div className={styles.newFolderForm}>
@@ -163,19 +208,12 @@ export default function FilesPage() {
                 <input
                   type="file"
                   className={styles.fileInputHidden}
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  onChange={(e) => {
+                    const selected = e.target.files?.[0];
+                    if (selected) handleUpload(selected);
+                  }}
                 />
               </label>
-
-              {file && (
-                <button
-                  className={styles.uploadButtonCard}
-                  onClick={handleUpload}
-                  disabled={uploading}
-                >
-                  {uploading ? "Uploading..." : "Upload"}
-                </button>
-              )}
             </div>
 
             {filteredFiles.map((file) => (
