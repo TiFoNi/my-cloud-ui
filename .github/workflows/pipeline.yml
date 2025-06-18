@@ -22,9 +22,18 @@ jobs:
       - name: 🚀 SSH to EC2 and deploy
         run: |
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            # Install PM2 if missing
+            if ! command -v pm2 &> /dev/null; then
+              npm install -g pm2
+            fi
+
+            # Go to project and update
             cd my-cloud-ui
             git pull origin master
             npm install
             npm run build
-            pm2 restart my-cloud-ui || npm run start &
+
+            # Restart app with PM2
+            pm2 delete my-cloud-ui || true
+            pm2 start npm --name my-cloud-ui -- run start
           EOF
