@@ -1,27 +1,30 @@
-name: CI Pipeline
+name: Deploy to EC2
 
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 jobs:
-  install_build_test:
-    name: Install, Build
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout repository
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🟢 Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: 📁 Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 📦 Install dependencies
-        run: npm install
-
-      - name: 🛠 Build
-        run: npm run build
+      - name: 🚀 SSH to EC2 and deploy
+        run: |
+          ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            cd my-cloud-ui
+            git pull origin master
+            npm install
+            npm run build
+            pm2 restart my-cloud-ui || npm run start &
+          EOF
