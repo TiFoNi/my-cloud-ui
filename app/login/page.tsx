@@ -12,6 +12,16 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuthStore();
 
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   const verifiedToken = params.get("verified");
+  //   if (verifiedToken) {
+  //     localStorage.setItem("token", verifiedToken);
+  //     login();
+  //     router.push("/files");
+  //   }
+  // }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");

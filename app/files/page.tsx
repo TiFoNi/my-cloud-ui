@@ -132,7 +132,7 @@ export default function FilesPage() {
               selectedFolderId === folder._id ? styles.activeFolder : ""
             }`}
             style={{
-              paddingLeft: `${level * 1}rem`,
+              paddingLeft: `${0.5 + level * 1.5}rem`,
               marginTop: "2px",
               display: "flex",
               justifyContent: "space-between",
@@ -178,7 +178,7 @@ export default function FilesPage() {
               className={`${styles.folderItem} ${
                 !selectedFolderId ? styles.activeFolder : ""
               }`}
-              style={{ paddingLeft: 0 }}
+              style={{ paddingLeft: 0.5 + "rem" }}
               onClick={() => setSelectedFolderId("")}
             >
               📁 Всі файли
