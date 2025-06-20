@@ -224,7 +224,6 @@ export default function FilesPage() {
                   <div className={styles.cardActions}>
                     <button
                       onClick={() => {
-                        const token = localStorage.getItem("token");
                         const downloadUrl = `/api/files/download?s3Key=${encodeURIComponent(file.s3Key)}`;
 
                         const a = document.createElement("a");
