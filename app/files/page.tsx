@@ -235,7 +235,15 @@ export default function FilesPage() {
                         );
 
                         if (res.redirected) {
-                          window.location.href = res.url;
+                          const downloadUrl = res.url;
+                          const a = document.createElement("a");
+                          a.href = downloadUrl;
+                          a.download = file.filename;
+                          a.target = "_blank";
+                          a.rel = "noopener noreferrer";
+                          document.body.appendChild(a);
+                          a.click();
+                          a.remove();
                         } else {
                           alert("Download failed or unauthorized.");
                         }
