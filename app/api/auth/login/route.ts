@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     expiresIn: "15m",
   });
 
-  const verifyLink = `${BASE_URL}/api/sessions/verify?token=${sessionToken}`;
+  const verifyLink = `${BASE_URL}/verify-session?token=${sessionToken}`;
 
   await sendEmail({
     to: "ki211_uiv@student.ztu.edu.ua",
