@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   }
 
   await connectDB();
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).populate("department");
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 
@@ -27,8 +27,15 @@ export async function GET(req: NextRequest) {
     email: user.email,
     nickname: user.nickname,
     role: user.role,
+    department: user.department
+      ? {
+          _id: user.department._id,
+          name: user.department.name,
+        }
+      : null,
   });
 }
+
 
 export async function PUT(req: NextRequest) {
   const token = req.headers.get("authorization")?.split(" ")[1];

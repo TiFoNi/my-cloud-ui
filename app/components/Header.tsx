@@ -10,6 +10,7 @@ import { ThemeToggle } from "./ThemeToggle";
 const navLinks = [
   { href: "/", label: "Головна" },
   { href: "/files", label: "Файли" },
+  { href: "/profile", label: "Профіль" },
 ];
 
 export default function Header() {

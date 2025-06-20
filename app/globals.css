@@ -2,8 +2,8 @@
 
 :root {
 --font-main: 'Inter', sans-serif;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
+    --primary: #16a34a;
+        --primary-hover: #10b981;
     --danger: #ef4444;
     --danger-hover: #dc2626;
     --success: #10b981;
