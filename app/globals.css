@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-font-family: var(--font-main);
---primary: #3b82f6;
+--font-main: 'Inter', sans-serif;
+    --primary: #3b82f6;
     --primary-hover: #2563eb;
     --danger: #ef4444;
     --danger-hover: #dc2626;
@@ -10,11 +10,60 @@ font-family: var(--font-main);
     --success-hover: #059669;
     --gray: #6b7280;
     --light-gray: #e5e7eb;
-    --font-main: 'Inter', sans-serif;
+    --card-bg: #ffffff;
+        --card-border: #e5e7eb;
+        --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        --card-header: #111827;
+        --download: #10b981;
+        --download-hover: #059669;
+        --upload-bg: #f9fafb;
+        --upload-hover: #ffffff;
+        --upload-border: var(--light-gray);
+        --upload-icon: #9ca3af;
+        --bg-header: rgba(255, 255, 255, 0.8);
+        --border-color: #e5e7eb;
+        --text-primary: #111827;
+        --link-color: #374151;
+        --link-hover: #f3f4f6;
+    }
+    
+    .dark {
+        --bg-header: rgba(17, 24, 39, 0.8);
+        --border-color: #374151;
+        --text-primary: #f3f4f6;
+        --link-color: #d1d5db;
+        --link-hover: #1f2937;
+        --card-bg: #1f2937;
+        --card-border: #374151;
+        --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        --card-header: #f9fafb;
+        --download: #22c55e;
+        --download-hover: #16a34a;
+        --upload-bg: #1f2937;
+        --upload-hover: #334155;
+        --upload-border: #374151;
+        --upload-icon: #d1d5db;
+    }
+    
+    body::after {
+        content: '';
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1500px;
+        background: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1440 320' xmlns='http://www.w3.org/2000/svg'><path fill='%2310b981' fill-opacity='0.08' d='M0,288 C240,320 480,256 720,288 C960,320 1200,256 1440,288 L1440,320 L0,320 Z' /></svg>") no-repeat bottom center;
+        background-size: cover;
+        z-index: -1;
+        pointer-events: none;
 }
 
-body {
+html {
     font-family: var(--font-main);
-    background-color: #fff;
+background-color: #ffffff;
     color: #111827;
+}
+html.dark {
+    background-color: #111827;
+    color: #e5e7eb;
 }

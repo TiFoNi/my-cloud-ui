@@ -142,7 +142,21 @@ export default function FilesPage() {
           >
             <span>
               {level > 0 && <span style={{ marginRight: "4px" }}>↳</span>}
-              📁 {folder.name}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={styles.folderIcon}
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 7a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+              </svg>{" "}
+              {folder.name}
             </span>
             <button
               className={styles.deleteFolderBtn}
@@ -150,8 +164,22 @@ export default function FilesPage() {
                 e.stopPropagation();
                 handleDeleteFolder(folder._id);
               }}
+              aria-label="Delete folder"
             >
-              ❌
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
             </button>
           </div>
           {renderFolders(folder._id, level + 1)}
@@ -181,22 +209,38 @@ export default function FilesPage() {
               style={{ paddingLeft: 0.5 + "rem" }}
               onClick={() => setSelectedFolderId("")}
             >
-              📁 Всі файли
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={styles.folderIcon}
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 7a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+              </svg>{" "}
+              Всі файли
             </div>
             {renderFolders()}
           </div>
 
           <div className={styles.newFolderForm}>
-            <input
-              type="text"
-              className={styles.textInput}
-              placeholder="New folder name"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-            />
-            <button className={styles.button} onClick={createFolder}>
-              + New Folder
-            </button>
+            <div className={styles.newFolderActions}>
+              <input
+                type="text"
+                className={styles.textInput}
+                placeholder="New folder name"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+              />
+              <button className={styles.button} onClick={createFolder}>
+                ＋
+              </button>
+            </div>
           </div>
         </aside>
 

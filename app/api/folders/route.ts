@@ -70,13 +70,11 @@ export async function DELETE(req: NextRequest) {
 
   const folderIdsToDelete = [folderId, ...collectDescendantIds(folderId)];
 
-  // Знайти всі файли в цих папках
   const filesToDelete = await File.find({
     userId,
     folderId: { $in: folderIdsToDelete },
   });
 
-  // Зібрати ключі S3
   const s3Keys = filesToDelete.map((file) => ({ Key: file.s3Key }));
 
   if (s3Keys.length > 0) {
@@ -88,10 +86,8 @@ export async function DELETE(req: NextRequest) {
     );
   }
 
-  // Видалити файли з бази
   await File.deleteMany({ userId, folderId: { $in: folderIdsToDelete } });
 
-  // Видалити папки з бази
   await Folder.deleteMany({ userId, _id: { $in: folderIdsToDelete } });
 
   return NextResponse.json({

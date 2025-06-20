@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import styles from "./header.module.css";
 import { useAuthStore } from "@/lib/store/auth";
 import { useHasHydrated } from "@/lib/utils/useHasHydrated";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Головна" },
@@ -95,9 +96,12 @@ export default function Header() {
 
         <div className={styles.actions}>
           {isLoggedIn ? (
-            <button onClick={handleLogout} className={styles.logout}>
-              Logout
-            </button>
+            <>
+              <button onClick={handleLogout} className={styles.logout}>
+                Logout
+              </button>
+              <ThemeToggle />
+            </>
           ) : (
             <>
               <button
