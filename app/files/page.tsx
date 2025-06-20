@@ -223,15 +223,19 @@ export default function FilesPage() {
                   <p>{new Date(file.uploadedAt).toLocaleString()}</p>
                   <div className={styles.cardActions}>
                     <button
-                      onClick={() => {
-                        const downloadUrl = `/api/files/download?s3Key=${encodeURIComponent(file.s3Key)}`;
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        if (!token) return alert("Not authenticated");
+
+                        const url = `/api/files/download?s3Key=${encodeURIComponent(
+                          file.s3Key
+                        )}&token=${token}`;
 
                         const a = document.createElement("a");
-                        a.href = downloadUrl;
+                        a.href = url;
                         a.download = file.filename;
                         a.target = "_blank";
                         a.rel = "noopener noreferrer";
-
                         document.body.appendChild(a);
                         a.click();
                         a.remove();
