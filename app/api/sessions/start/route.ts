@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   const sessionToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
     expiresIn: "15m",
   });
-  console.log("Session token generated:", sessionToken);
+
   const verifyLink = `${BASE_URL}/verify-session?token=${sessionToken}`;
 
   await sendEmail({
