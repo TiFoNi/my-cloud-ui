@@ -26,12 +26,10 @@ jobs:
             git pull origin master
             npm install
 
-            # Install PM2 locally (project level)
             npm install pm2
 
             npm run build
 
-            # Stop old instance and start new one using npx
             npx pm2 delete my-cloud-ui || true
             npx pm2 start npm --name my-cloud-ui -- run start
           EOF
