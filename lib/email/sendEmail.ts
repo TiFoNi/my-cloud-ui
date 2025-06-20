@@ -17,7 +17,6 @@ export async function sendEmail({ to, subject, html }: SendEmailProps) {
       html,
     });
 
-    console.log("Email sent:", data);
     return data;
   } catch (error) {
     console.error("Email send error:", error);
