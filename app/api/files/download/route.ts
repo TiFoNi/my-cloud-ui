@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { verifyToken } from "@/lib/utils/verifyToken";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -11,11 +12,17 @@ const s3 = new S3Client({
 });
 
 export async function GET(req: NextRequest) {
+  const token = req.headers.get("authorization")?.split(" ")[1];
   const { searchParams } = new URL(req.url);
   const s3Key = searchParams.get("s3Key");
 
-  if (!s3Key) {
-    return NextResponse.json({ error: "Missing s3Key" }, { status: 400 });
+  if (!token || !s3Key) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = verifyToken(token);
+  if (!userId) {
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
   try {

@@ -222,14 +222,28 @@ export default function FilesPage() {
                 <div className={styles.cardBody}>
                   <p>{new Date(file.uploadedAt).toLocaleString()}</p>
                   <div className={styles.cardActions}>
-                    <a
-                      href={`/api/files/download?s3Key=${encodeURIComponent(
-                        file.s3Key
-                      )}`}
+                    <button
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        const res = await fetch(
+                          `/api/files/download?s3Key=${encodeURIComponent(file.s3Key)}`,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
+                          }
+                        );
+
+                        if (res.redirected) {
+                          window.location.href = res.url;
+                        } else {
+                          alert("Download failed or unauthorized.");
+                        }
+                      }}
                       className={styles.downloadBtn}
                     >
                       Download
-                    </a>
+                    </button>
 
                     <button
                       onClick={async () => {
