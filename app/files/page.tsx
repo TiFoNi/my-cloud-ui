@@ -223,30 +223,19 @@ export default function FilesPage() {
                   <p>{new Date(file.uploadedAt).toLocaleString()}</p>
                   <div className={styles.cardActions}>
                     <button
-                      onClick={async () => {
+                      onClick={() => {
                         const token = localStorage.getItem("token");
-                        const res = await fetch(
-                          `/api/files/download?s3Key=${encodeURIComponent(file.s3Key)}`,
-                          {
-                            headers: {
-                              Authorization: `Bearer ${token}`,
-                            },
-                          }
-                        );
+                        const downloadUrl = `/api/files/download?s3Key=${encodeURIComponent(file.s3Key)}`;
 
-                        if (res.redirected) {
-                          const downloadUrl = res.url;
-                          const a = document.createElement("a");
-                          a.href = downloadUrl;
-                          a.download = file.filename;
-                          a.target = "_blank";
-                          a.rel = "noopener noreferrer";
-                          document.body.appendChild(a);
-                          a.click();
-                          a.remove();
-                        } else {
-                          alert("Download failed or unauthorized.");
-                        }
+                        const a = document.createElement("a");
+                        a.href = downloadUrl;
+                        a.download = file.filename;
+                        a.target = "_blank";
+                        a.rel = "noopener noreferrer";
+
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
                       }}
                       className={styles.downloadBtn}
                     >
