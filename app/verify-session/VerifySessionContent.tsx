@@ -2,10 +2,12 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "@/lib/store/auth";
 
 export default function VerifySessionContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { login } = useAuthStore();
   const [status, setStatus] = useState<"verifying" | "success" | "error">(
     "verifying"
   );
@@ -22,6 +24,7 @@ export default function VerifySessionContent() {
       .then((data) => {
         if (data?.success) {
           localStorage.setItem("token", data.token);
+          login();
           setStatus("success");
           setTimeout(() => router.push("/files"), 1500);
         } else {
@@ -29,7 +32,7 @@ export default function VerifySessionContent() {
         }
       })
       .catch(() => setStatus("error"));
-  }, [searchParams, router]);
+  }, [searchParams, router, login]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "4rem" }}>
