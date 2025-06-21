@@ -13,27 +13,40 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
-  const folderId = searchParams.get("folderId");
+  const folderIdRaw = searchParams.get("folderId");
+  const folderId = folderIdRaw === "null" ? null : folderIdRaw;
 
   const currentUser = await User.findById(userId);
   if (!currentUser?.department) {
-    return NextResponse.json([], { status: 200 });
+    const query: { userId: string; folderId?: string | null } = { userId };
+    if (folderIdRaw !== null) {
+      query.folderId = folderId;
+    }
+
+    const ownFiles = await File.find(query).sort({ uploadedAt: -1 });
+    return NextResponse.json({ ownFiles, deptFiles: [] });
   }
 
   const usersInDept = await User.find({ department: currentUser.department });
-  const userIds = usersInDept.map((u) => u._id);
+  const userIds: string[] = usersInDept.map((u) => u._id.toString());
 
-  const query: {
+  const queryAll: {
     userId: { $in: string[] };
     folderId?: string | null;
   } = {
     userId: { $in: userIds },
   };
 
-  if (folderId !== null) {
-    query.folderId = folderId === "null" ? null : folderId;
+  if (folderIdRaw !== null) {
+    queryAll.folderId = folderId;
   }
 
-  const files = await File.find(query).sort({ uploadedAt: -1 });
-  return NextResponse.json(files);
+  const allFiles = await File.find(queryAll).sort({ uploadedAt: -1 });
+
+  const ownFiles = allFiles.filter((file) => file.userId.toString() === userId);
+  const deptFiles = allFiles.filter(
+    (file) => file.userId.toString() !== userId
+  );
+
+  return NextResponse.json({ ownFiles, deptFiles });
 }

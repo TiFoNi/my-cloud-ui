@@ -2,10 +2,10 @@
 
 :root {
 --font-main: 'Inter', sans-serif;
-    --primary: #16a34a;
-        --primary-hover: #10b981;
+    --primary: #10b981;
+        --primary-hover: #059669;
     --danger: #ef4444;
-    --danger-hover: #dc2626;
+    --danger-hover: #ef4444;
     --success: #10b981;
     --success-hover: #059669;
     --gray: #6b7280;
@@ -37,8 +37,8 @@
         --card-border: #374151;
         --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         --card-header: #f9fafb;
-        --download: #22c55e;
-        --download-hover: #16a34a;
+        --download: #10b981;
+            --download-hover: #059669;
         --upload-bg: #1f2937;
         --upload-hover: #334155;
         --upload-border: #374151;
@@ -58,6 +58,7 @@
         pointer-events: none;
 }
 
+
 html {
     font-family: var(--font-main);
 background-color: #ffffff;
@@ -66,4 +67,23 @@ background-color: #ffffff;
 html.dark {
     background-color: #111827;
     color: #e5e7eb;
+}
+html,
+body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: transparent;
 }

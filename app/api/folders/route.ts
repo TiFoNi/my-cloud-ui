@@ -30,8 +30,12 @@ export async function GET(req: NextRequest) {
   const usersInDept = await User.find({ department: currentUser.department });
   const userIds = usersInDept.map((u) => u._id);
 
-  const folders = await Folder.find({ userId: { $in: userIds } });
-  return NextResponse.json(folders);
+   const ownFolders = await Folder.find({ userId });
+   const deptFolders = await Folder.find({
+     userId: { $in: userIds.filter((id) => id.toString() !== userId) },
+   });
+
+   return NextResponse.json({ ownFolders, deptFolders });
 }
 
 export async function POST(req: NextRequest) {
