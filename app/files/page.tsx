@@ -33,7 +33,7 @@ export default function FilesPage() {
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
 
-  console.log(uploading, deptFolders);
+  console.log(uploading);
 
   useEffect(() => {
     if (!isLoggedIn) router.push("/login");
