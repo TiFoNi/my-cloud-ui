@@ -19,24 +19,35 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 🚀 SSH deploy (no build checks)
+      - name: 🚀 SSH deploy
         run: |
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            echo "♻️ Оновлення проєкту..."
-            cd ~/my-cloud-ui || mkdir ~/my-cloud-ui && cd ~/my-cloud-ui
+            echo "📁 Створюю тимчасову копію..."
+            rm -rf ~/my-cloud-ui-temp
+            cp -r ~/my-cloud-ui ~/my-cloud-ui-temp || mkdir ~/my-cloud-ui-temp
+
+            cd ~/my-cloud-ui-temp
 
             echo "⬇️ Оновлюю код..."
             git reset --hard HEAD
-            git pull origin master || true
+            git pull origin master
 
             echo "📦 Встановлення залежностей..."
             npm install --omit=dev --legacy-peer-deps
 
-            echo "🚀 Перезапуск..."
+            echo "🏗️ Створюю білд..."
+            npm run build
+
+            echo "🧹 Оновлюю продакшн версію..."
             pm2 delete my-cloud-ui || true
-            pm2 start "npm run start" --name my-cloud-ui
+            rm -rf ~/my-cloud-ui
+            mv ~/my-cloud-ui-temp ~/my-cloud-ui
+
+            echo "🚀 Запускаю продакшн..."
+            cd ~/my-cloud-ui
+            pm2 start "npx next start" --name my-cloud-ui
             pm2 save
           EOF
 
