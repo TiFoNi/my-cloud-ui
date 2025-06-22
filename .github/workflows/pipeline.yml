@@ -24,17 +24,25 @@ jobs:
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            cd my-cloud-ui
-            git pull origin master
+            echo "📁 Копіюю проект у тимчасову папку..."
+            rm -rf my-cloud-ui-temp
+            cp -r my-cloud-ui my-cloud-ui-temp
+            cd my-cloud-ui-temp
+
+            echo "📦 Встановлення залежностей..."
             npm install
 
             echo "📦 Starting build..."
-            NODE_ENV=production NEXT_IGNORE_TYPECHECK=1 npm run build
+            NODE_ENV=production npm run build
 
-            echo "🗑️ Deleting old process if exists..."
+            echo "🧹 Все ок, оновлюю продакшн версію..."
+            cd ..
             pm2 delete my-cloud-ui || true
+            rm -rf my-cloud-ui
+            mv my-cloud-ui-temp my-cloud-ui
 
-            echo "🚀 Starting new process..."
+            echo "🚀 Запускаю нову версію..."
+            cd my-cloud-ui
             pm2 start "npm run start" --name my-cloud-ui
             pm2 save
           EOF
