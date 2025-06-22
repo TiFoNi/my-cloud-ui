@@ -28,6 +28,7 @@ jobs:
             cd ~/my-cloud-ui || mkdir ~/my-cloud-ui && cd ~/my-cloud-ui
 
             echo "⬇️ Оновлюю код..."
+            git reset --hard HEAD
             git pull origin master || true
 
             echo "📦 Встановлення залежностей..."
