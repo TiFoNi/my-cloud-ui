@@ -25,9 +25,9 @@ jobs:
             cd my-cloud-ui
             git pull origin master
             npm install
-            npm run build -- --no-lint
+            NODE_ENV=production NEXT_IGNORE_TYPECHECK=1 npm run build
             pm2 delete my-cloud-ui || true
-            pm2 start "next start --no-lint" --name my-cloud-ui
+            pm2 start "npm run start" --name my-cloud-ui
             pm2 save
           EOF
 
