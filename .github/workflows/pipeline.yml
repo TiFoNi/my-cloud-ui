@@ -28,7 +28,7 @@ jobs:
             rm -rf ~/my-cloud-ui-temp
 
             echo "📦 Копіюю проєкт у тимчасову папку..."
-            cp -r ~/my-cloud-ui ~/my-cloud-ui-temp
+            rsync -a --exclude=node_modules ~/my-cloud-ui/ ~/my-cloud-ui-temp/
 
             echo "⚙️ Копіюю конфіг-файли..."
             cp ~/my-cloud-ui/.env ~/my-cloud-ui-temp/.env || true
