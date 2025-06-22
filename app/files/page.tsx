@@ -30,7 +30,7 @@ export default function FilesPage() {
   const [newFolderName, setNewFolderName] = useState("");
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const router = useRouter();
+
   const { isLoggedIn } = useAuthStore();
 
   console.log(uploading);
