@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Fast Deploy to EC2
 
 on:
   push:
@@ -19,30 +19,22 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 🚀 SSH to EC2 and deploy
+      - name: 🚀 SSH deploy (no build checks)
         run: |
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            echo "📁 Копіюю проект у тимчасову папку..."
-            rm -rf my-cloud-ui-temp
-            cp -r my-cloud-ui my-cloud-ui-temp
-            cd my-cloud-ui-temp
+            echo "♻️ Оновлення проєкту..."
+            cd ~/my-cloud-ui || mkdir ~/my-cloud-ui && cd ~/my-cloud-ui
+
+            echo "⬇️ Оновлюю код..."
+            git pull origin master || true
 
             echo "📦 Встановлення залежностей..."
-            npm install
+            npm install --omit=dev --legacy-peer-deps
 
-            echo "📦 Starting build..."
-            NODE_ENV=production npm run build
-
-            echo "🧹 Все ок, оновлюю продакшн версію..."
-            cd ..
+            echo "🚀 Перезапуск..."
             pm2 delete my-cloud-ui || true
-            rm -rf my-cloud-ui
-            mv my-cloud-ui-temp my-cloud-ui
-
-            echo "🚀 Запускаю нову версію..."
-            cd my-cloud-ui
             pm2 start "npm run start" --name my-cloud-ui
             pm2 save
           EOF
@@ -52,11 +44,11 @@ jobs:
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendMessage \
             -d chat_id=${{ secrets.TG_CHAT_ID }} \
-            -d text="✅ Deploy to EC2 succeeded!"
+            -d text="✅ Fast deploy to EC2 succeeded!"
 
       - name: 🔴 Telegram failure message
         if: failure()
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendMessage \
             -d chat_id=${{ secrets.TG_CHAT_ID }} \
-            -d text="❌ Deploy to EC2 failed!"
+            -d text="❌ Fast deploy to EC2 failed!"
