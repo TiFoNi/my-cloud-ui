@@ -24,33 +24,17 @@ jobs:
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            echo "🧹 Чищу стару тимчасову папку..."
-            rm -rf ~/my-cloud-ui-temp
+            cd my-cloud-ui
+            git pull origin master
+            npm install
 
-            echo "📦 Копіюю проєкт у тимчасову папку..."
-            rsync -a --exclude=node_modules ~/my-cloud-ui/ ~/my-cloud-ui-temp/
-
-            echo "⚙️ Копіюю конфіг-файли..."
-            cp ~/my-cloud-ui/.env ~/my-cloud-ui-temp/.env || true
-            cp ~/my-cloud-ui/.npmrc ~/my-cloud-ui-temp/.npmrc || true
-
-            cd ~/my-cloud-ui-temp
-
-            echo "📦 Встановлюю залежності..."
-            npm install --omit=dev --legacy-peer-deps
-
-            echo "🏗️ Build..."
+            echo "📦 Starting build..."
             NODE_ENV=production NEXT_IGNORE_TYPECHECK=1 npm run build
 
-            echo "✅ Build успішний, оновлюю проєкт..."
-
-            cd ~
-            rm -rf ~/my-cloud-ui-backup
-            mv ~/my-cloud-ui ~/my-cloud-ui-backup
-            mv ~/my-cloud-ui-temp ~/my-cloud-ui
-
-            echo "♻️ Перезапуск..."
+            echo "🗑️ Deleting old process if exists..."
             pm2 delete my-cloud-ui || true
+
+            echo "🚀 Starting new process..."
             pm2 start "npm run start" --name my-cloud-ui
             pm2 save
           EOF
