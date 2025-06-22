@@ -17,6 +17,7 @@ export default function Header() {
   const pathname = usePathname();
   const hydrated = useHasHydrated();
   const router = useRouter();
+
   const { isLoggedIn, logout } = useAuthStore();
 
   if (!hydrated) return null;
