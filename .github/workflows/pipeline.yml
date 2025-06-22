@@ -22,11 +22,19 @@ jobs:
       - name: 🚀 SSH to EC2 and deploy
         run: |
           ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+
             cd my-cloud-ui
             git pull origin master
             npm install
+
+            echo "📦 Starting build..."
             NODE_ENV=production NEXT_IGNORE_TYPECHECK=1 npm run build
+
+            echo "🗑️ Deleting old process if exists..."
             pm2 delete my-cloud-ui || true
+
+            echo "🚀 Starting new process..."
             pm2 start "npm run start" --name my-cloud-ui
             pm2 save
           EOF
