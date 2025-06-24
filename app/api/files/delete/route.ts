@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { verifyToken } from "@/lib/utils/verifyToken";
 import File from "@/models/File";
+import fs from "fs";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({
@@ -33,6 +34,12 @@ export async function DELETE(req: NextRequest) {
   );
 
   await File.deleteOne({ _id: fileId });
+
+  fs.appendFileSync(
+    "/home/ec2-user/my-cloud-ui/logs/app.log",
+    `Deleted file: ${file.s3Key} by user ${userId} at ${new Date().toISOString()}\n`
+  );
+
 
   return NextResponse.json({ message: "File deleted" });
 }
